@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody playerRB;
     public float playerSpeed;
     public bool isGrounded;
+    public bool missleMode;
+    public Transform orientation;
     [SerializeField]
     private float moveX;
     [SerializeField]
@@ -29,21 +31,35 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.E))
+        {
+            missleMode = true;
+        }
         PlayerMoveInputs();
         //jump 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
             playerRB.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
         }
+    
 
-       
 
-        
+
+
     }
 
     private void FixedUpdate()
     {
-        moveDirection = transform.forward * moveZ + transform.right * moveX;
+        if (missleMode == false)
+        {
+            moveDirection = orientation.forward * moveZ + orientation.right * moveX;
+        }
+            
+        else
+        {
+            moveDirection = orientation.up * moveZ + orientation.right * moveX;
+        }
+            
         playerRB.AddForce(moveDirection.normalized * playerSpeed, ForceMode.Force);
         
     }
