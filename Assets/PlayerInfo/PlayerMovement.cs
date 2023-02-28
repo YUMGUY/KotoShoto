@@ -15,6 +15,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float moveZ;
     public Vector3 moveDirection;
+    public float testRotation_x;
+    public float testRotation_y;
+    public float testRotation_z;
 
 
     [Header("Player Dash Factors")]
@@ -35,14 +38,20 @@ public class PlayerMovement : MonoBehaviour
         {
             missleMode = true;
         }
-        PlayerMoveInputs();
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            DashForward();
+        }
+       // PlayerMoveInputs();
         //jump 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
+            print("jump");
             playerRB.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
         }
-    
 
+        
 
 
 
@@ -58,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             moveDirection = orientation.up * moveZ + orientation.right * moveX;
+
         }
             
         playerRB.AddForce(moveDirection.normalized * playerSpeed, ForceMode.Force);
@@ -78,7 +88,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void DashForward()
     {
-
+        if(missleMode == false) { return; }
+        print("hit");
+        StartCoroutine(DashingProcess());
     }
 
     private void OnCollisionStay(Collision collision)
@@ -92,6 +104,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+    private IEnumerator DashingProcess()
+    {
+        playerRB.useGravity = false;
+        RaycastHit Hitinfo;
+        Vector3 result = Camera.main.transform.forward;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out Hitinfo, 100.0f))
+        {
+            print("trigger was hit");
+            result = Hitinfo.point - transform.position;
+            result = result.normalized;
+            
+        }
+        playerRB.AddForce((dashForce * result), ForceMode.Impulse); 
+
+
+        //yield return new WaitForSeconds(1f);
+        //playerRB.velocity = Vector3.zero;
+        yield return null;
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         if (collision != null)
@@ -101,5 +134,11 @@ public class PlayerMovement : MonoBehaviour
                 isGrounded = false;
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + Quaternion.Euler(testRotation_x,testRotation_y,testRotation_z) * transform.forward * 5);
     }
 }
