@@ -31,15 +31,7 @@ public class MissleMode : MonoBehaviour
 
     public IEnumerator MissleModeActivate()
     {
-        print("co");
-        //transform.rotation = Quaternion.Euler(90, 0, 0);
-        //turningFactor.enabled = false;
-        //turningFactor.turnV = Vector2.zero;
-        //cam1.Priority = 0;
-        //cam2.Priority = 1;
-       // camTarget.transform.localPosition = new Vector3(0, -5, 0f);
-      //  camTarget.transform.localRotation = Quaternion.Euler(-90, 0, 0);
-       // cam1.Follow = camTarget.transform;
+        print("missle mode activated");
        
         yield return new WaitForSeconds(.1f);
 
