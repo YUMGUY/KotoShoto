@@ -214,7 +214,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 23258545}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 74.2}
+  m_LocalPosition: {x: 0, y: 0, z: 159.8}
   m_LocalScale: {x: 5, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 27735850}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -362,11 +362,13 @@ MonoBehaviour:
   testRotation_x: 0
   testRotation_y: 0
   testRotation_z: 0
+  numDashes: 0
   isDashing: 0
   dashForce: 0
   jumpForce: 10
-  airTime: 0
+  suspendedAirTime: 0
   dashDuration: 0
+  missleModeRef: {fileID: 0}
   curve:
     serializedVersion: 2
     m_Curve: []
@@ -391,6 +393,10 @@ MonoBehaviour:
   cam1: {fileID: 391823782}
   cam2: {fileID: 0}
   processActivated: 0
+  rotationSpeed: 0
+  fallingSpeed: 0
+  isSpinning: 0
+  playerRB: {fileID: 0}
 --- !u!114 &27735853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,7 +677,7 @@ GameObject:
   - component: {fileID: 391823783}
   - component: {fileID: 391823782}
   m_Layer: 0
-  m_Name: CM vcam1
+  m_Name: CM vcam1 ( next on prio)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -857,13 +863,14 @@ GameObject:
   - component: {fileID: 431799657}
   - component: {fileID: 431799660}
   - component: {fileID: 431799659}
+  - component: {fileID: 431799661}
   m_Layer: 0
-  m_Name: Pointer
+  m_Name: Pointer w/ MissleMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &431799657
 Transform:
   m_ObjectHideFlags: 0
@@ -871,14 +878,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431799656}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.19, z: 2}
-  m_LocalScale: {x: 0.37, y: 0.34, z: 4}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0.69}
+  m_LocalScale: {x: 0.5, y: 5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1295340085}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!23 &431799659
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -899,7 +906,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 43bc2aa9a99a7ec4e96013e3ba8d5058, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -929,6 +936,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431799656}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &431799661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431799656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc530f0bdef2d1947bfd251dcc437d08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMissle: {fileID: 0}
+  camTarget: {fileID: 0}
+  turningFactor: {fileID: 0}
+  cam1: {fileID: 391823782}
+  cam2: {fileID: 0}
+  processActivated: 0
+  rotationSpeed: 300
+  fallingSpeed: 10
+  isSpinning: 0
+  playerRB: {fileID: 0}
 --- !u!1 &475273019
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,7 +1162,7 @@ Transform:
   m_GameObject: {fileID: 550800517}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.7, y: -3, z: -4.499979}
-  m_LocalScale: {x: 100, y: 5, z: 100}
+  m_LocalScale: {x: 200, y: 5, z: 200}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1394,8 +1423,9 @@ GameObject:
   - component: {fileID: 1245007465}
   - component: {fileID: 1245007464}
   - component: {fileID: 1245007463}
+  - component: {fileID: 1245007467}
   m_Layer: 0
-  m_Name: Enemy (1)
+  m_Name: test enemy with rigidbody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1409,7 +1439,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245007462}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -1472,13 +1502,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245007462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 9.52, z: 18.45}
+  m_LocalPosition: {x: 0, y: 0.59, z: 18.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1245007467
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245007462}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 14
+  m_CollisionDetection: 0
 --- !u!1 &1253232797
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,7 +1538,7 @@ GameObject:
   - component: {fileID: 1253232799}
   - component: {fileID: 1253232798}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Overlay UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1593,11 +1639,10 @@ GameObject:
   - component: {fileID: 1295340083}
   - component: {fileID: 1295340088}
   - component: {fileID: 1295340087}
-  - component: {fileID: 1295340086}
   - component: {fileID: 1295340090}
   - component: {fileID: 1295340089}
   m_Layer: 0
-  m_Name: Player alt
+  m_Name: Player Real
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1671,24 +1716,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1295340086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1295340081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc530f0bdef2d1947bfd251dcc437d08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerMissle: {fileID: 1295340081}
-  camTarget: {fileID: 385824478}
-  turningFactor: {fileID: 1295340087}
-  cam1: {fileID: 391823782}
-  cam2: {fileID: 0}
-  processActivated: 0
 --- !u!114 &1295340087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1717,7 +1744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRB: {fileID: 1295340089}
-  playerSpeed: 20
+  playerSpeed: 15
   isGrounded: 0
   missleMode: 0
   orientation: {fileID: 1295340085}
@@ -1727,11 +1754,13 @@ MonoBehaviour:
   testRotation_x: 0
   testRotation_y: 0
   testRotation_z: 0
+  numDashes: 0
   isDashing: 0
   dashForce: 20
   jumpForce: 10
-  airTime: 0.5
+  suspendedAirTime: 0.2
   dashDuration: 1
+  missleModeRef: {fileID: 431799661}
   curve:
     serializedVersion: 2
     m_Curve:
@@ -1966,7 +1995,6 @@ GameObject:
   - component: {fileID: 1680468786}
   - component: {fileID: 1680468788}
   - component: {fileID: 1680468789}
-  - component: {fileID: 1680468790}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -2023,21 +2051,8 @@ MonoBehaviour:
     m_Bits: 16
   IgnoreTag: 
   CameraRadius: 0.2
-  DampingIntoCollision: 0
+  DampingIntoCollision: 0.55
   DampingFromCollision: 2
---- !u!114 &1680468790
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680468785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4c41ac9245b87c4192012080077d830, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Damping: 0
 --- !u!1 &1688191198
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,7 +2497,7 @@ GameObject:
   - component: {fileID: 2137181226}
   - component: {fileID: 2137181225}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2506,7 +2521,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2137181225
 MonoBehaviour:
@@ -2521,7 +2536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.3882353}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78039217}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

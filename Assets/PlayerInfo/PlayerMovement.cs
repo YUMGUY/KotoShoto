@@ -21,17 +21,20 @@ public class PlayerMovement : MonoBehaviour
 
 
     [Header("Player Dash Factors")]
+    public int numDashes;
     public bool isDashing;
     public float dashForce;
     public float jumpForce;
-    public float airTime;
+    public float suspendedAirTime;
     public float dashDuration;
+    public MissleMode missleModeRef;
     public AnimationCurve curve;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        numDashes = 1;
     }
 
     // Update is called once per frame
@@ -54,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         //jump 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
-            print("jump");
+            //print("jump");
             playerRB.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
         }
 
@@ -65,18 +68,15 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
-       
-       moveDirection = orientation.forward * moveZ + orientation.right * moveX;
-      
-            
+    {  
+       moveDirection = orientation.forward * moveZ + orientation.right * moveX;         
         //else
         //{
         //    moveDirection = orientation.up * moveZ + orientation.right * moveX;
 
         //}
             
-        playerRB.AddForce(moveDirection.normalized * playerSpeed, ForceMode.Force);
+        playerRB.AddForce(moveDirection.normalized * playerSpeed /** 10.0f*/, ForceMode.Force);
         // cap speed
     }
 
@@ -95,7 +95,8 @@ public class PlayerMovement : MonoBehaviour
             Vector3 newVel = rawVel.normalized * playerSpeed;
             playerRB.velocity = new Vector3(newVel.x, playerRB.velocity.y, newVel.z);
         }
-        print(playerRB.velocity.magnitude);
+
+        //print(playerRB.velocity.magnitude);
     }
 
     private void DashForward()
@@ -105,12 +106,21 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(DashingProcess());
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") && isGrounded == false && missleModeRef.isSpinning == true)
+        {
+            print("SMASH");
+        }
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if(collision != null)
         {
             if(collision.gameObject.CompareTag("Ground"))
             {
+
                 isGrounded = true;
             }
         }
@@ -134,14 +144,14 @@ public class PlayerMovement : MonoBehaviour
         bool hitGround = false;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out Hitinfo, 100.0f))
         {
-            print("trigger was hit");
+            print("trigger or hard collider was hit");
             result = Hitinfo.point - transform.position;
             result = result.normalized;
             if(Hitinfo.collider.tag == "Ground")
             {
                 print("hit the ground");
                 hitGround = true;
-                maxDistance = Hitinfo.collider.gameObject.transform.position - transform.position; // use hitinfo to fix ground
+                maxDistance = Hitinfo.point - transform.position; // use hitinfo to fix ground
             }  
         }
 
@@ -153,7 +163,19 @@ public class PlayerMovement : MonoBehaviour
         {
             if(!hitGround)
             playerRB.MovePosition(Vector3.Lerp(startPos, startPos + (dashForce * result), curve.Evaluate(timer/dashDuration)));
-            else { playerRB.MovePosition(Vector3.Lerp(startPos, startPos + maxDistance, curve.Evaluate(timer / dashDuration))); }
+            else 
+            { 
+                if(maxDistance.magnitude <= (dashForce*result).magnitude)
+                {
+                    playerRB.MovePosition(Vector3.Lerp(startPos, startPos + .95f * maxDistance, curve.Evaluate(timer / dashDuration)));
+                }
+                else
+                {
+                    print("not too close to ground");
+                    playerRB.MovePosition(Vector3.Lerp(startPos, startPos + (dashForce * result), curve.Evaluate(timer / dashDuration)));
+                }
+                
+            }
             timer += Time.deltaTime;
             yield return null;
         }
@@ -178,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
       
         // yield return new WaitForSeconds(airTime);
         playerRB.drag = originalDrag;
-        yield return new WaitForSeconds(airTime);
+        yield return new WaitForSeconds(suspendedAirTime);
         isDashing = false;
         moveX = 0;
         moveZ = 0;

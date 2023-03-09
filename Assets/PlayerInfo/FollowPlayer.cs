@@ -11,6 +11,6 @@ public class FollowPlayer : MonoBehaviour
     void Update()
     {
         transform.position = Vector3.Lerp(transform.position, camTarget.position, pLerp);
-        transform.rotation = Quaternion.Lerp(transform.rotation, camTarget.rotation, rLerp);
+        //transform.rotation = Quaternion.Lerp(transform.rotation, camTarget.rotation, rLerp);
     }
 }
