@@ -14,14 +14,20 @@ public class MissleMode : MonoBehaviour
 
     [Header("Spinning Factors")]
     public float rotationSpeed;
-    public float fallingSpeed;
+    public float fallingSpeed; // will be changed by upgrades
+    public float fallingFactor;
     public bool isSpinning;
     private float rotationTimer;
     public AnimationCurve smoothRotCurve;
-    
 
+
+    [Header("Smashing Factors")]
+    public float maxShake;
+    public float minShake;
+    public CinemachineImpulseSource shaker;
     [SerializeField]
     private Rigidbody playerRB;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +38,7 @@ public class MissleMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
         //if(Input.GetKeyDown(KeyCode.E) && processActivated == false)
         //{
         //    print("Entering Missle Mode");
@@ -39,13 +46,24 @@ public class MissleMode : MonoBehaviour
         //    processActivated = true;
         //}
 
-        if(Input.GetKey(KeyCode.R))
+        // make falling speed dependent on angle of player facing downwards
+        fallingFactor = (-1.0f * transform.parent.rotation.eulerAngles.x) / 90;
+
+        if (transform.parent.rotation.x < 0.0f)
+        {
+            fallingFactor = 0;
+        }
+        else
+        {
+            fallingFactor = Mathf.Clamp(fallingFactor, -1.0f, 0);
+        }
+        // activate spin mode
+        if (Input.GetKey(KeyCode.R))
         {
             
             // smoothly begin rotation
-
             transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
-            playerRB.AddForce(new Vector3(0.0f,-1 * fallingSpeed,0.0f),ForceMode.Acceleration);
+            playerRB.AddForce(new Vector3(0.0f,fallingFactor * fallingSpeed,0.0f),ForceMode.Acceleration);
             isSpinning = true;
         }
         else

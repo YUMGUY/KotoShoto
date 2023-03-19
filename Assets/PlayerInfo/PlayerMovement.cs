@@ -15,9 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float moveZ;
     public Vector3 moveDirection;
-    public float testRotation_x;
-    public float testRotation_y;
-    public float testRotation_z;
+    public AnimationCurve forceCurve;
 
 
     [Header("Player Dash Factors")]
@@ -60,8 +58,6 @@ public class PlayerMovement : MonoBehaviour
             //print("jump");
             playerRB.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
         }
-
-        
 
 
 
@@ -111,6 +107,12 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") && isGrounded == false && missleModeRef.isSpinning == true)
         {
             print("SMASH");
+
+            // later on use animationcurve to determine level of force generated
+            float forceGenerated = collision.relativeVelocity.y * .2f;
+            forceGenerated = Mathf.Abs(Mathf.Clamp(forceGenerated, missleModeRef.minShake,missleModeRef.maxShake));
+            print(forceGenerated);
+            missleModeRef.shaker.GenerateImpulse(forceGenerated);
         }
     }
 
@@ -139,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
         playerRB.drag = 0;
         RaycastHit Hitinfo;
         Vector3 result = Camera.main.transform.forward;
-        Vector3 dashLength;
+       // Vector3 dashLength;
         Vector3 maxDistance = Vector3.zero;
         bool hitGround = false;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out Hitinfo, 100.0f))
@@ -205,8 +207,6 @@ public class PlayerMovement : MonoBehaviour
         moveX = 0;
         moveZ = 0;
         moveDirection = Vector3.zero;
-
-
         yield return null;
     }
 
@@ -224,6 +224,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + Quaternion.Euler(testRotation_x,testRotation_y,testRotation_z) * transform.forward * 5);
+       // Gizmos.DrawLine(transform.position, transform.position + Quaternion.Euler(testRotation_x,testRotation_y,testRotation_z) * transform.forward * 5);
     }
 }
