@@ -144,17 +144,24 @@ public class PlayerMovement : MonoBehaviour
        // Vector3 dashLength;
         Vector3 maxDistance = Vector3.zero;
         bool hitGround = false;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out Hitinfo, 100.0f))
+        
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out Hitinfo, 200.0f))
         {
             print("trigger or hard collider was hit");
             result = Hitinfo.point - transform.position;
             result = result.normalized;
-            if(Hitinfo.collider.tag == "Ground")
+            if(Hitinfo.collider.CompareTag("Ground"))
             {
                 print("hit the ground");
                 hitGround = true;
                 maxDistance = Hitinfo.point - transform.position; // use hitinfo to fix ground
-            }  
+            }
+
+            // account for edge case when camera ray hit object behind player
+            if (Mathf.Abs(Hitinfo.point.z) <= transform.position.z)
+            {
+                result = Camera.main.transform.forward;
+            }
         }
 
         float timer = 0;
@@ -164,7 +171,11 @@ public class PlayerMovement : MonoBehaviour
         while (timer < dashDuration)
         {
             if(!hitGround)
-            playerRB.MovePosition(Vector3.Lerp(startPos, startPos + (dashForce * result), curve.Evaluate(timer/dashDuration)));
+            {
+               // print(result.magnitude);
+                playerRB.MovePosition(Vector3.Lerp(startPos, startPos + (dashForce * result), curve.Evaluate(timer / dashDuration)));
+            }
+           
             else 
             { 
                 if(maxDistance.magnitude <= (dashForce*result).magnitude)
@@ -173,7 +184,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else
                 {
-                    print("not too close to ground");
+                    //print("not too close to ground");
                     playerRB.MovePosition(Vector3.Lerp(startPos, startPos + (dashForce * result), curve.Evaluate(timer / dashDuration)));
                 }
                 

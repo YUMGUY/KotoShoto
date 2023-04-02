@@ -8,6 +8,9 @@
         },
         {
             "m_Id": "fe78f0e192794273bc0a6d3d6988fc6e"
+        },
+        {
+            "m_Id": "c49ef4b9986d4a748f92bbbf9c4928a8"
         }
     ],
     "m_Keywords": [],
@@ -669,6 +672,33 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "c49ef4b9986d4a748f92bbbf9c4928a8",
+    "m_Guid": {
+        "m_GuidSerialized": "b61482ce-7ad0-4e7d-9a6d-6fb3d03b6531"
+    },
+    "m_Name": "opacity",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "opacity",
+    "m_DefaultReferenceName": "_opacity",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 1.0,
+    "m_FloatType": 1,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.CategoryData",
     "m_ObjectId": "ddb62f360ea64a2f86be22eb5a1b2a0a",
@@ -679,6 +709,9 @@
         },
         {
             "m_Id": "fe78f0e192794273bc0a6d3d6988fc6e"
+        },
+        {
+            "m_Id": "c49ef4b9986d4a748f92bbbf9c4928a8"
         }
     ]
 }
