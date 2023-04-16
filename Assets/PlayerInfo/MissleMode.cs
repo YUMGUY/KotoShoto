@@ -96,4 +96,13 @@ public class MissleMode : MonoBehaviour
         yield return null;
         processActivated = false;
     }
+
+    // collide main body with enemies, enemy layer is 3, do TakeDmg function
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 3)
+        {
+            print("bruh");
+        }
+    }
 }

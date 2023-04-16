@@ -52,7 +52,6 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         timer -= Time.deltaTime;
-        numAlive = 0;
         numAlive = enemiesAlive.Count;
         if(timer <= 0)
         {
@@ -74,8 +73,8 @@ public class EnemySpawner : MonoBehaviour
         int tries = 0;
         while(tries < attemptsAllowed && enemiesAlive.Count < enemiesToSpawn) // avoid infinite loop , either do forloop for while
         {
-            Vector3 spawnPoint = transform.position + (Random.insideUnitSphere * xBoundSize); // THEN THE SPAWNING IS RESTRICTED BY y bound values
-            if (Physics.CheckSphere(spawnPoint, enemySpawnRadiusOffset,layerToHit) == false && yLowerBound <= spawnPoint.y && spawnPoint.y <= yUpperBound)
+            Vector3 spawnPoint = transform.position + new Vector3(Random.Range(-1 * xBoundSize, xBoundSize), Random.Range(yLowerBound, yUpperBound), Random.Range(-1 * xBoundSize, xBoundSize));
+            if (Physics.CheckSphere(spawnPoint, enemySpawnRadiusOffset,layerToHit) == false)
             {
                 GameObject enemy = Instantiate(enemyPrefab, spawnPoint, Random.rotation);
                 enemiesAlive.Add(enemy);
