@@ -102,33 +102,6 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(DashingProcess());
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground") && isGrounded == false && missleModeRef.isSpinning == true)
-        {
-            print("SMASH");
-
-            // later on use animationcurve to determine level of force generated
-            float forceGenerated = collision.relativeVelocity.y * .2f;
-            forceGenerated = Mathf.Abs(Mathf.Clamp(forceGenerated, missleModeRef.minShake,missleModeRef.maxShake));
-            print(forceGenerated);
-            missleModeRef.shaker.GenerateImpulse(forceGenerated);
-        }
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if(collision != null)
-        {
-            if(collision.gameObject.CompareTag("Ground"))
-            {
-
-                isGrounded = true;
-            }
-        }
-    }
-
-
     private IEnumerator DashingProcess()
     {
         isDashing = true;
@@ -221,6 +194,31 @@ public class PlayerMovement : MonoBehaviour
         yield return null;
     }
 
+    // might have to move this to missle mode afterwards
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") && isGrounded == false && missleModeRef.isSpinning == true)
+        {
+            print("SMASH");
+
+            // later on use animationcurve to determine level of force generated
+            float forceGenerated = collision.relativeVelocity.y * .2f;
+            forceGenerated = Mathf.Abs(Mathf.Clamp(forceGenerated, missleModeRef.minShake, missleModeRef.maxShake));
+            print(forceGenerated);
+            missleModeRef.shaker.GenerateImpulse(forceGenerated);
+        }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision != null)
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+
+                isGrounded = true;
+            }
+        }
+    }
     private void OnCollisionExit(Collision collision)
     {
         if (collision != null)
